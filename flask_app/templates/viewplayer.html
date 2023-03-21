@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" 
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" 
+    crossorigin="anonymous">
+    <title>Individual Profile Page</title>
+</head>
+<body class="text-bg-light">
+    <div class="">
+        <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><h1>{{onePlayer.first_name}} {{onePlayer.last_name}} </h1></a>
+                <span>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item ">
+                            <a class="nav-link" href="/profile">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/social">Social</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/activty">Activity</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/search">Search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/addplayer">Add Player</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
+            </div>
+        </nav>
+        <div class="container">
+            <h3>Team: {{onePlayer.team}}</h3>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped text-nowrap text-center">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Season</th>
+                                <th scope="col">Games Played</th>
+                                <th scope="col">Minutes Played</th>
+                                <th scope="col">Field Goals Made</th>
+                                <th scope="col">3-Pointers Made</th>
+                                <th scope="col">Free Throws Made</th>
+                                <th scope="col">Rebounds</th>
+                                <th scope="col">Assists</th>
+                                <th scope="col">Steals</th>
+                                <th scope="col">Blocks</th>
+                                <th scope="col">Points</th>
+                            </tr>
+                            <tr>
+                                <td>{{onePlayer.season}}</td>
+                                <td>{{onePlayer.gp}}</td>
+                                <td>{{onePlayer.mins}}</td>
+                                <td>{{onePlayer.fgm}}</td>
+                                <td>{{onePlayer.fg3m}}</td>
+                                <td>{{onePlayer.ftm}}</td>
+                                <td>{{onePlayer.reb}}</td>
+                                <td>{{onePlayer.ast}}</td>
+                                <td>{{onePlayer.stl}}</td>
+                                <td>{{onePlayer.blk}}</td>
+                                <td>{{onePlayer.pts}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="MB-4">
+                    <div class="">
+                        <form action="/createcomment" method="post">
+                        <input type="hidden" name="user_id" value="{{session.user_id}}">
+                        <input type="hidden" name="id" value="{{comments.id}}">
+                            <div class="form-group col-sm-3">
+                                <label for="comment">Comment About Player:</label>
+                                <!-- For name= we need to add in the name that will reference the same name from our database -->
+                                <input type="text" class="form-control mt-2 " name="comment" value= "{{onePlayer.first_name}} {{onePlayer.last_name}} is ">
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="rating">You rating of the player (1-10):</label>
+                                <select name="rating" id="rating">
+                                    <option value = "1">1</option>
+                                    <option value = "2">2</option>
+                                    <option value = "3">3</option>
+                                    <option value = "4">4</option>
+                                    <option value = "5">5</option>
+                                    <option value = "6">6</option>
+                                    <option value = "7">7</option>
+                                    <option value = "8">8</option>
+                                    <option value = "9">9</option>
+                                    <option value = "10">10</option>
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="add_drop">Would you add or drop them from your Fantasy team?</label>
+                                <select name="add_drop" id="add_drop">
+                                    <option value = "Add">Add</option>
+                                    <option value = "Drop">Drop</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-lg btn-dark mt-2">Add Comment</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    {% if onePlayer.user_id == logged_in_user.id %}
+                    <div>
+                        <h4>Edit Information:</h4>
+                    </div>
+                    <form action="/update/player/{{onePlayer.id}}" method="post">
+                        <input type="hidden" name="user_id" value="{{session.user_id}}">
+                        <input type="hidden" name="id" value="{{onePlayer.id}}">
+                        <div class="row g-3">
+                            <div class="form-group">
+                                <label for="first_name">First Name:</label>
+                                <!-- For name= we need to add in the name that will reference the same name from our database -->
+                                <input type="text" class="form-control mt-2" name="first_name" value="{{onePlayer.first_name}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="last_name">Last Name:</label>
+                                <input type="text" class="form-control mt-2" name="last_name" value="{{onePlayer.last_name}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Team:</label>
+                                <input type="text" class="form-control mt-2" name="team" value="{{onePlayer.team}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Season:</label>
+                                <input type="number" class="form-control mt-2" name="season" value="{{onePlayer.season}}">
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="form-group col-sm">
+                                <label for="">Games Played:</label>
+                                <input type="number" class="form-control mt-2" name="gp" value="{{onePlayer.gp}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Field Goals Made:</label>
+                                <input type="number" class="form-control mt-2" name="fgm" value="{{onePlayer.fgm}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">3-Pointers Made:</label>
+                                <input type="number" class="form-control mt-2" name="fg3m" value="{{onePlayer.fg3m}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Free Throws Made:</label>
+                                <input type="number" class="form-control mt-2" name="ftm" value="{{onePlayer.ftm}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Rebounds:</label>
+                                <input type="number" class="form-control mt-2" name="reb" value="{{onePlayer.reb}}">
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="form-group col-sm">
+                                <label for="">Assists:</label>
+                                <input type="number" class="form-control mt-2" name="ast" value="{{onePlayer.ast}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Steals:</label>
+                                <input type="number" class="form-control mt-2" name="mins" value="{{onePlayer.mins}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Minutes Played:</label>
+                                <input type="number" class="form-control mt-2" name="stl" value="{{onePlayer.stl}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Blocks:</label>
+                                <input type="number" class="form-control mt-2" name="blk" value="{{onePlayer.blk}}">
+                            </div>
+                            <div class="form-group col-sm">
+                                <label for="">Points:</label>
+                                <input type="number" class="form-control mt-2" name="pts" value="{{onePlayer.pts}}">
+                            </div>
+                        </div>
+                        <button class="btn btn-lg btn-dark mt-2">Update Player</button>
+                        </form>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
